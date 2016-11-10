@@ -110,7 +110,7 @@ public class Autonomous1 extends LinearOpMode {
 
         }
     }
-        runtime.reset();
+        //runtime.reset();
 /*
         /************************
          * Autonomous Code Below://
