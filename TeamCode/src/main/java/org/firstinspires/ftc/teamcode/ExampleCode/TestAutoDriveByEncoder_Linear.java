@@ -74,7 +74,7 @@ public class TestAutoDriveByEncoder_Linear extends LinearOpMode {
     //reset runtime counter
     private ElapsedTime runtime = new ElapsedTime();
     /* //////////
-    //Declare OpMode members.
+    //Declare devices as OpMode members.
     *////////////
 
     //motors

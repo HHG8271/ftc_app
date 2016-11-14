@@ -37,9 +37,9 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.LightSensor;
+import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
-
 import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
 
 /**
@@ -47,8 +47,7 @@ import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
  * The code is structured as a LinearOpMode
  *
  * The code shows using two possible different light sensors:
- *   The Primary sensor shown in this code is a MR Optical Distance Sensor (called "sensor_ods")
- *   Alternative "commented out" code uses a legacy NXT Light sensor (called "sensor_light")
+ *   The sensor shown in this code is a MR Optical Distance Sensor (called "sensor_ods")
  *
  *   Setting the correct WHITE_THRESHOLD value is key to stopping correctly.
  *   This should be set half way between the light and dark values.
@@ -80,13 +79,12 @@ public class TestAutoDriveToLine_Linear extends LinearOpMode {
     Servo servoHandL = null;
     Servo servoHandR = null;
 
-    //sensors                                                        // could also use HardwarePushbotMatrix class.
-    LightSensor             lightSensor;      // Primary LEGO Light sensor,
-    // OpticalDistanceSensor   lightSensor;   // Alternative MR ODS sensor
+    //sensors
+    OpticalDistanceSensor lightSensor;   //  Modern Robotics ODS sensor
 
     //variables
     static final double     WHITE_THRESHOLD = 0.2;  // spans between 0.1 - 0.5 from dark to light
-    static final double     APPROACH_SPEED  = 0.5;
+    static final double     APPROACH_SPEED  = 0.5;  // adjust to desired motor speed ( 0.0 - 1.0 )
 
     @Override
     public void runOpMode() {
@@ -134,14 +132,15 @@ public class TestAutoDriveToLine_Linear extends LinearOpMode {
             idle();
         }
 
-        // Start the robot moving forward, and then begin looking for a white line.
+        // Once Start is pressed the robot begins moving forward, and then enters while loop looking for a white line threshold.
         motorLeft.setPower(APPROACH_SPEED);
         motorRight.setPower(APPROACH_SPEED);
 
         // run until the white line is seen OR the driver presses STOP;
+        // will continue to display Light Level values
         while (opModeIsActive() && (lightSensor.getLightDetected() < WHITE_THRESHOLD)) {
 
-            // Display the light level while we are looking for the line
+            // Continue displaying the light level while we are looking for the line threshold value
             telemetry.addData("Light Level",  lightSensor.getLightDetected());
             telemetry.update();
         }
@@ -149,6 +148,8 @@ public class TestAutoDriveToLine_Linear extends LinearOpMode {
         // Stop all motors
         motorLeft.setPower(0);
         motorRight.setPower(0);
+        sleep(1000);     // pause for 1 sec to allow motors to fully stop
+
 
         /*///////////////
         // Alternatively you could add additional code here to continue on with Autonomous actions
