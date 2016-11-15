@@ -49,9 +49,9 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Don't forget to comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Example: Autonomous", group="Examples")  // @TeleOp(...) is the other common choice
+@Autonomous(name="Example AutoByTime", group="Test")  // @TeleOp(...) is the other common choice
 //@Disabled
-public class ExampleAutonomous extends LinearOpMode {
+public class TestAutoDriveByTime extends LinearOpMode {
 
     /* Declare OpMode members. */
     private ElapsedTime runtime = new ElapsedTime();
@@ -168,4 +168,4 @@ public class ExampleAutonomous extends LinearOpMode {
     }
 
 
-}//ExampleAutonomous
+}//TestAutoDriveByTime
