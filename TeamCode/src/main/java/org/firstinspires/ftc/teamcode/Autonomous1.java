@@ -34,7 +34,7 @@ package org.firstinspires.ftc.teamcode;
 import android.app.Activity;
 import android.graphics.Color;
 import android.view.View;
-
+import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -42,6 +42,8 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.hardware.ColorSensor;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
 
 /**
  * This file contains an minimal example of a Linear Autonomous "OpMode".
@@ -55,22 +57,20 @@ import com.qualcomm.robotcore.hardware.ColorSensor;
 @Autonomous(name= "Autonomous", group="Examples")  // @TeleOp(...) is the other common choice
 
 public class Autonomous1 extends LinearOpMode {
-    ColorSensor colorSensor;
-
+    ColorSensor colorSensor;// STATING SENSORS
+    ModernRoboticsI2cRangeSensor rangeSensor;
     /* Declare OpMode members. */
-    private ElapsedTime runtime = new ElapsedTime();
     //motors
-    DcMotor motorLeft = null;
-    DcMotor motorRight = null;
-    DcMotor motorFlick = null;
+    DcMotor motorLeft;
+    DcMotor motorRight;
+    DcMotor motorFlick;
 
     //servos
-    Servo Servo = null;
-    Servo servoHandL = null;
-    Servo servoHandR = null;
+    Servo Servo;
+    OpticalDistanceSensor odsSensor;
 
     //Create and set default hand positions variables. To be determined based on your build
-    double left = 0.2;
+    double left = 0.2; // POSITIONS OF BEACON SERVO
     double right = 0.8;
 
     @Override
@@ -79,37 +79,97 @@ public class Autonomous1 extends LinearOpMode {
         //adds feedback telemetry to DS
         telemetry.addData("Status", "Initialized");
         telemetry.update();
+        float hsvValues[] = {0F, 0F, 0F};
+
+        // values is a reference to the hsvValues array.
+        final float values[] = hsvValues;
+
+        // get a reference to the RelativeLayout so we can change the background
+        // color of the Robot Controller app to match the hue detected by the RGB sensor.
+        final View relativeLayout = ((Activity) hardwareMap.appContext).findViewById(com.qualcomm.ftcrobotcontroller.R.id.RelativeLayout);
+
+        // bPrevState and bCurrState represent the previous and current state of the button.
+        boolean bPrevState = false;
+        boolean bCurrState = false;
+
+        // bLedOn represents the state of the LED.
+        boolean bLedOn = true;
+
+        // get a reference to our ColorSensor object.
+        colorSensor = hardwareMap.colorSensor.get("sensor_color");
+        odsSensor = hardwareMap.opticalDistanceSensor.get("sensor_ods");
+        // Set the LED in the beginning
+        colorSensor.enableLed(bLedOn);
+
 
         /* eg: Initialize the hardware variables. Note that the strings used here as parameters
          * to 'get' must correspond to the names assigned during the robot configuration
          * step (using the FTC Robot Controller app on the phone).
          */
-         motorLeft  = hardwareMap.dcMotor.get("motor_left");
-         motorRight = hardwareMap.dcMotor.get("motor_right");
-        // motorFlick = hardwareMap.dcMotor.get("motorFLick");
-         Servo = hardwareMap.servo.get("armServo");     //autonomous code example below uses servo for arm instead/in addition to motor
+        rangeSensor = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "sensor_range");
+        motorLeft = hardwareMap.dcMotor.get("motor_left");
+        motorRight = hardwareMap.dcMotor.get("motor_right");
+        motorFlick = hardwareMap.dcMotor.get("motorFlick");
+        Servo = hardwareMap.servo.get("Servo");     //autonomous code example below uses servo for arm instead/in addition to motor
         //assuming a pushBot configuration of two servo grippers
 
-        
+
         // eg: Set the drive motor directions:
         // "Reverse" the motor that runs backwards when connected directly to the battery
-         motorLeft.setDirection(DcMotor.Direction.FORWARD); // Set to REVERSE if using AndyMark motors
-         motorRight.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
-         motorFlick.setDirection(DcMotor.Direction.FORWARD); // Can change based on motor configuration
-        
-        //Set servo hand grippers to open position. 
-         servoHandL.setPosition(right);
-         servoHandR.setPosition(left);
-        
+        motorLeft.setDirection(DcMotor.Direction.FORWARD); // Set to REVERSE if using AndyMark motors
+        motorRight.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
+        motorFlick.setDirection(DcMotor.Direction.FORWARD); // Can change based on motor configuration
+
+        //Set servo hand grippers to open position.
+        Servo.setPosition(.5);
+
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
-        while(true)
-        {
+        while (opModeIsActive()) {
+            motorFlick.setPower(1);
+            Thread.sleep(4000);
+            /*Color.RGBToHSV(colorSensor.red() * 8, colorSensor.green() * 8, colorSensor.blue() * 8, hsvValues);
+            if (rangeSensor.rawUltrasonic() >4.15 ) {// while Ultrasonic is farther than 4.15 away
+                // follow the line
 
+                    motorLeft.setPower(.2);// driving straight.
+                    motorRight.setPower(.2);
+            }
+                else if(odsSensor.getLightDetected()<5&&rangeSensor.rawUltrasonic()>4.15)
+                {
+                    motorLeft.setPower(.2);
+                    motorRight.setPower(-.1);
+
+                }
+
+            if (rangeSensor.rawUltrasonic() <4.15 ) {
+                motorRight.setPower(0);
+                motorLeft.setPower(0);
+                if (colorSensor.red() > 20) {
+                    Servo.setPosition(right);
+
+
+                } else if (colorSensor.blue() > 20) {
+                    Servo.setPosition(left);
+
+                }
+            }
+
+            telemetry.addData("raw ultrasonic", rangeSensor.rawUltrasonic());
+            telemetry.addData("raw optical", rangeSensor.rawOptical());
+            telemetry.addData("Red  ", colorSensor.red());
+            telemetry.addData("Green", colorSensor.green());
+            telemetry.addData("Raw",    odsSensor.getRawLightDetected());
+            telemetry.addData("Normal", odsSensor.getLightDetected());
+            telemetry.update();*/
+
+           idle();
+        }
 
 
         }
     }
+
         //runtime.reset();
 /*
         /************************
@@ -180,4 +240,4 @@ public class Autonomous1 extends LinearOpMode {
     }*/
 
 
-}//ExampleAutonomous
+//ExampleAutonomous

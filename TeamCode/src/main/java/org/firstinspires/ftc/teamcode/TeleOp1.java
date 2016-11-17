@@ -18,7 +18,7 @@ public class TeleOp1 extends LinearOpMode
     DcMotor motorRight = null;
     DcMotor motorFlick = null;
     DcMotor motorConveyor = null;
-
+     Servo servo=null;
     //servos
     // Servo servoHandL = null;
     //Servo servoHandR = null;
@@ -39,6 +39,7 @@ public class TeleOp1 extends LinearOpMode
         motorRight = hardwareMap.dcMotor.get("motor_right");
         motorFlick = hardwareMap.dcMotor.get("motorFlick");
         motorConveyor = hardwareMap.dcMotor.get("motorConveyor");
+        servo = hardwareMap.servo.get("Servo");
         // servoHandL = hardwareMap.servo.get("servoHandL"); //assuming a pushBot configuration of two servo grippers
         //servoHandR = hardwareMap.servo.get("servoHandR");
 
@@ -52,7 +53,7 @@ public class TeleOp1 extends LinearOpMode
         //Set servo hand grippers to open position.
         // servoHandL.setPosition(OPEN);
         //servoHandR.setPosition(OPEN);
-
+          servo.setPosition(.5);
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
         runtime.reset();
@@ -86,7 +87,20 @@ public class TeleOp1 extends LinearOpMode
             {
                 motorConveyor.setPower(1);
             }
+            if(gamepad1.right_bumper)
+            {
+               servo.setPosition(.3) ;
 
+            }
+            else if (gamepad1.left_bumper)
+            {
+               servo.setPosition(.7)  ;
+
+            }
+            else
+            {
+                servo.setPosition(.5);
+            }
 
             idle(); // Always call idle() at the bottom of your while(opModeIsActive()) loop
         }
