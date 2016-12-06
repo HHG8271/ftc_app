@@ -30,9 +30,10 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
 TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.ExampleCode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
@@ -58,7 +59,8 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  */
 
 @Autonomous(name="TestAuto ODS & Encoder", group="Test")
-//@Disabled
+@Disabled
+
 public class TestAutoDriveLineAndEncoder_Linear extends LinearOpMode {
 
     //reset runtime counter
@@ -120,8 +122,8 @@ public class TestAutoDriveLineAndEncoder_Linear extends LinearOpMode {
         lightSensor.enableLed(true);
 
         // If there are encoders connected, switch to RUN_USING_ENCODER mode for greater accuracy
-        // robot.leftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        // robot.rightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        motorLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        motorRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
 
         // Send telemetry message to signify robot waiting;
@@ -138,6 +140,12 @@ public class TestAutoDriveLineAndEncoder_Linear extends LinearOpMode {
             telemetry.update();
             idle();
         }
+
+        ///
+        //  Add code here for steps before white line (See example steps below)
+        ///
+        encoderDrive(DRIVE_SPEED,  48,  48, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
+
 
         // Once Start is pressed the robot begins moving forward, and then enters while loop looking for a white line threshold.
         motorLeft.setPower(APPROACH_SPEED);
