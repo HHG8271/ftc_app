@@ -55,7 +55,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
  * Use Android Studio to Copy this Class, and Paste it into your team's code folder with a new name.
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
-@TeleOp(name = "Sensor: MR Color", group = "Sensor")
+@TeleOp(name = "Sensor test bed ")
 
 public class SensorMRColor extends LinearOpMode {
 
@@ -66,7 +66,7 @@ public class SensorMRColor extends LinearOpMode {
   public void runOpMode() {
 
     // hsvValues is an array that will hold the hue, saturation, and value information.
-    float hsvValues[] = {0F,0F,0F};
+    final float hsvValues[] = {0F,0F,0F};
 
     // values is a reference to the hsvValues array.
     final float values[] = hsvValues;
@@ -83,7 +83,7 @@ public class SensorMRColor extends LinearOpMode {
     boolean bLedOn = true;
 
     // get a reference to our ColorSensor object.
-    colorSensor = hardwareMap.colorSensor.get("sensor_color");
+    colorSensor = hardwareMap.colorSensor.get("color_sensor");
 
     // Set the LED in the beginning
     colorSensor.enableLed(bLedOn);
@@ -94,7 +94,8 @@ public class SensorMRColor extends LinearOpMode {
     // while the op mode is active, loop and read the RGB data.
     // Note we use opModeIsActive() as our loop condition because it is an interruptible method.
     while (opModeIsActive()) {
-      motor1 = hardwareMap.dcMotor.get("motor_1");
+      motor1 = hardwareMap.dcMotor.get("motor1");
+      colorSensor = hardwareMap.colorSensor.get("color_sensor");
       // check the status of the x button on either gamepad.
       bCurrState = gamepad1.x;
 
@@ -115,11 +116,12 @@ public class SensorMRColor extends LinearOpMode {
       Color.RGBToHSV(colorSensor.red() * 8, colorSensor.green() * 8, colorSensor.blue() * 8, hsvValues);
 
       // send the info back to driver station using telemetry function.
-      telemetry.addData("LED", bLedOn ? "On" : "Off");
+           telemetry.addData("LED", bLedOn ? "On" : "Off");
       telemetry.addData("Clear", colorSensor.alpha());
       telemetry.addData("Red  ", colorSensor.red());
       telemetry.addData("Green", colorSensor.green());
       telemetry.addData("Blue ", colorSensor.blue());
+
       telemetry.addData("Hue", hsvValues[0]);
 
       // change the background color to match the color detected by the RGB sensor.
@@ -128,14 +130,14 @@ public class SensorMRColor extends LinearOpMode {
       relativeLayout.post(new Runnable() {
         public void run() {
           relativeLayout.setBackgroundColor(Color.HSVToColor(0xff, values));
-          if(colorSensor.red()>20)
+          if( hsvValues[0]>40)
           {
             motor1.setPower(1);
 
         }
-          else if (colorSensor.blue()>20)
+          else if (hsvValues[0]<40)
           {
-            motor1.setPower(-1);
+            motor1.setPower(0);
           }
           else
           {

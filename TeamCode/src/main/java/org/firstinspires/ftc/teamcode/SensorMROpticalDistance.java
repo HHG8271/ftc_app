@@ -50,14 +50,14 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 //@Disabled
 public class SensorMROpticalDistance extends LinearOpMode {
 
-  TouchSensor touch_sensor;   // Hardware Device Object
+  OpticalDistanceSensor ods;   // Hardware Device Object
 
   DcMotor motor_1;
   @Override
   public void runOpMode() {
 
     // get a reference to our Light Sensor object.
-    touch_sensor = hardwareMap.touchSensor.get("touch_sensor");
+    ods = hardwareMap.opticalDistanceSensor.get("ods");
     int counter = 0;
     motor_1 = hardwareMap.dcMotor.get("motor_1");
     // wait for the start button to be pressed.
@@ -68,18 +68,9 @@ public class SensorMROpticalDistance extends LinearOpMode {
     while (opModeIsActive()) {
 
       // send the info back to driver station using telemetry function.
+        telemetry.addData("Raw",    ods.getRawLightDetected());
+        telemetry.addData("Normal", ods.getLightDetected());
 
-
-      if (touch_sensor.isPressed())
-      {
-        motor_1.setPower(1);
-      }
-     else
-
-      {
-
-        motor_1.setPower(0);
-      }
       telemetry.update();
     }
   }
