@@ -40,13 +40,14 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 /**
- * This file contains a configration for Mr. Reynolds' TestBed motors/servos/sensor
+ * This file contains a configuration for Mr. Reynolds' TestBed motors/servos/sensor
  *
  * It is intended to test basic function of program parameters
  *
- * You could make a copy and adjust Configuration to match you bot for use as a basic testing
+ * You could make a copy and adjust Configuration to match your bot for use as a basic testing
  * platform.
  */
+
 
 @TeleOp(name="TestBedOpMode", group="Examples")  // @Autonomous(...) is the other common choice
 @Disabled
@@ -66,7 +67,7 @@ public class TestBed_TeleOp extends LinearOpMode {
 
 
     //Create and set default servo positions variables.
-    //Possible servo values: 0.0 - 1.0  For CRServo 5=stop greater or less than will spin in that direction
+    //Possible servo values: 0.0 - 1.0  For CRServo 0.5=stop greater or less than will spin in that direction
     double CLOSED = 0.1;
     double OPEN = 1.0;
     double SpinLeft = 0.1;
