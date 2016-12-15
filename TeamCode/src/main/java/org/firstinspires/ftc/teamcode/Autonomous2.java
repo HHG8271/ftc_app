@@ -20,7 +20,7 @@ import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
 public class Autonomous2 extends LinearOpMode {
     ColorSensor color_sensor;
 
-
+    ModernRoboticsI2cRangeSensor RangeSensor;
     DcMotor motorFlick;
     DcMotor motor_left;
     DcMotor motor_right;
@@ -50,7 +50,7 @@ public class Autonomous2 extends LinearOpMode {
 
         // get a reference to our ColorSensor object.
         color_sensor = hardwareMap.colorSensor.get("color_sensor");
-
+        RangeSensor = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "sensor_range");
         // Set the LED in the beginning
         color_sensor.enableLed(bLedOn);
 
@@ -72,11 +72,11 @@ public class Autonomous2 extends LinearOpMode {
         // "Reverse" the motor that runs backwards when connected directly to the battery
 
         motorFlick.setDirection(DcMotor.Direction.FORWARD); // Can change based on motor configuration
-        motor_left.setDirection(DcMotor.Direction.FORWARD);
-        motor_right.setDirection(DcMotor.Direction.REVERSE);
+        motor_left.setDirection(DcMotor.Direction.REVERSE);
+        motor_right.setDirection(DcMotor.Direction.FORWARD);
         //Set servo hand grippers to open position.
-
-
+        boolean val= false;
+        boolean sar= false;
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
 
@@ -95,26 +95,62 @@ public class Autonomous2 extends LinearOpMode {
             motorFlick.setPower(0);
             Thread.sleep(1000);
 
-            telemetry.addData("LED", bLedOn ? "On" : "Off");
-            telemetry.addData("Red  ", color_sensor.red());
+            motor_left.setPower(.4);
+            Thread.sleep(500);
+
+             val=true;
 
 
+        while(val==true ){
             if(color_sensor.red()<10 ) {
-                motor_right.setPower(.4);
-                motor_left.setPower(.4);
-
+                motor_right.setPower(.3);
+                motor_left.setPower(.3);
+                telemetry.addData("Red",color_sensor.red());
+                telemetry.update();
 
             }
-           else if( color_sensor.red()>10 )
-            {
-
+            if(color_sensor.red()>10) {
                 motor_right.setPower(0);
                 motor_left.setPower(0);
-
+                Thread.sleep(800);
+                val=false;
+                sar=true;
             }
+
+            telemetry.addData("Red  ", color_sensor.red());
             telemetry.update();
         }
+            while(sar=true &&RangeSensor.getDistance(DistanceUnit.CM)>8){
 
 
+                if(color_sensor.red()>10){
+
+                    motor_left.setPower(.3);
+                    motor_right.setPower(.3);
+                }
+                if(color_sensor.red()<10)
+                {
+                    motor_left.setPower(.3);
+                    motor_right.setPower(0);
+
+                }
+                telemetry.addData("cm optical", "%.2f cm", RangeSensor.cmOptical());
+                telemetry.addData("cm", "%.2f cm", RangeSensor.getDistance(DistanceUnit.CM));
+                telemetry.addData("Red  ", color_sensor.red());
+                telemetry.update();
+
+
+
+            }
+            motor_left.setPower(0);
+            motor_right.setPower(0);
+
+            telemetry.addData("cm", "%.2f cm", RangeSensor.getDistance(DistanceUnit.CM));
+            telemetry.addData("Red  ", color_sensor.red());
+            telemetry.update();
+
+        }
+
+idle();
     }
 }
