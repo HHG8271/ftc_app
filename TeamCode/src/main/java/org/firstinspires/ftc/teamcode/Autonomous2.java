@@ -19,12 +19,14 @@ import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
 @Autonomous(name= "Autonomous1", group="Examples")
 public class Autonomous2 extends LinearOpMode {
     ColorSensor color_sensor;
-
+    ColorSensor color_mid;
     ModernRoboticsI2cRangeSensor RangeSensor;
     DcMotor motorFlick;
     DcMotor motor_left;
     DcMotor motor_right;
-
+    Servo servo;
+    boolean far= false;
+    double
     @Override
 
     public void runOpMode() throws InterruptedException {
@@ -49,11 +51,13 @@ public class Autonomous2 extends LinearOpMode {
         boolean bLedOn = true;
 
         // get a reference to our ColorSensor object.
+        color_mid =hardwareMap.colorSensor.get("color_mid");
         color_sensor = hardwareMap.colorSensor.get("color_sensor");
         RangeSensor = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "sensor_range");
+        servo = hardwareMap.servo.get("servo");
         // Set the LED in the beginning
         color_sensor.enableLed(bLedOn);
-
+        color_mid.enableLed(bLedOn);
 
         /* eg: Initialize the hardware variables. Note that the strings used here as parameters
          * to 'get' must correspond to the names assigned during the robot configuration
@@ -96,6 +100,7 @@ public class Autonomous2 extends LinearOpMode {
             Thread.sleep(1000);
 
             motor_left.setPower(.4);
+            motor_right.setPower(-.4);
             Thread.sleep(500);
 
              val=true;
@@ -120,7 +125,7 @@ public class Autonomous2 extends LinearOpMode {
             telemetry.addData("Red  ", color_sensor.red());
             telemetry.update();
         }
-            while(sar=true &&RangeSensor.getDistance(DistanceUnit.CM)>8){
+            while(sar=true){
 
 
                 if(color_sensor.red()>10){
@@ -130,20 +135,37 @@ public class Autonomous2 extends LinearOpMode {
                 }
                 if(color_sensor.red()<10)
                 {
-                    motor_left.setPower(.3);
-                    motor_right.setPower(0);
+                    motor_left.setPower(0);
+                    motor_right.setPower(.3);
 
                 }
-                telemetry.addData("cm optical", "%.2f cm", RangeSensor.cmOptical());
+                else if(RangeSensor.getDistance(DistanceUnit.CM)<10){
+                    motor_left.setPower(0);
+                    motor_right.setPower(0);
+                    sar=false;
+                    far = true;
+                }
+                telemetry.addData("cm optical", "%.2f. cm", RangeSensor.cmOptical());
                 telemetry.addData("cm", "%.2f cm", RangeSensor.getDistance(DistanceUnit.CM));
                 telemetry.addData("Red  ", color_sensor.red());
                 telemetry.update();
 
 
 
+                while(far=true)
+                {
+                   if(color_mid.red()>=6)
+                   {
+
+                   }
+
+                    telemetry.addData("Red  ", color_sensor.red());
+                    telemetry.update();
+
+                }
+
+
             }
-            motor_left.setPower(0);
-            motor_right.setPower(0);
 
             telemetry.addData("cm", "%.2f cm", RangeSensor.getDistance(DistanceUnit.CM));
             telemetry.addData("Red  ", color_sensor.red());
