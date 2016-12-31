@@ -5,8 +5,6 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.util.ElapsedTime;
-
 
 
 /**
@@ -45,13 +43,18 @@ public class TestHardwareTeleOp extends LinearOpMode {
         while (opModeIsActive()) {  // run until the end of the match (driver presses STOP)
 
             // Display gamepad values to DS
-            telemetry.addData("LeftStick_Y", gamepad1.left_stick_y);
-            telemetry.addData("RightStick_Y", gamepad1.right_stick_y);
-            telemetry.addData("Button_A", gamepad1.a);
-            telemetry.addData("Button_B", gamepad1.b);
+            telemetry.addLine("left joystick | ")
+                    .addData("x", gamepad1.left_stick_x)
+                    .addData("y", gamepad1.left_stick_y);
+            telemetry.addLine("right joystick | ")
+                    .addData("x", gamepad1.right_stick_x)
+                    .addData("y", gamepad1.right_stick_y);
+            telemetry.addLine("Butons | ")
+                    .addData("Button_A", gamepad1.a)
+                    .addData("Button_B", gamepad1.b);
             telemetry.update();
 
-            // tank drive set to gamepad1 joysticks
+            // tank drive set drive motor powers to Y-stick value
             robot.motorLeft.setPower(gamepad1.left_stick_y);
             robot.motorRight.setPower(gamepad1.right_stick_y);
 
@@ -65,7 +68,7 @@ public class TestHardwareTeleOp extends LinearOpMode {
 
             //servo commands
             if(gamepad1.a) {
-                robot.servoHandR.setPosition(robot.OPEN);
+                robot.servoHandR.setPosition(robot.OPEN);  // Note: to change position value, go to HardwareSetup, or create new value or variable in this OpMode
                 robot.servoHandL.setPosition(robot.OPEN);
             }
             else if (gamepad1.b) {
