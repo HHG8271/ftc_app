@@ -50,16 +50,16 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 @TeleOp(name="Example: TeleOp", group="Examples")  // @Autonomous(...) is the other common choice
 //@Disabled
-public class HardwareExample_TeleOp extends LinearOpMode {
+public class TestHardwareTeleOp extends LinearOpMode {
 
     MyBotHardwareSetup robot = new MyBotHardwareSetup(); //set up remote to robot hardware configuration
 
     @Override
     public void runOpMode() throws InterruptedException {
 
-        robot.init(hardwareMap); //initializes hardware
+        robot.init(hardwareMap); //initializes hardware mapping from remote hardware configuration
 
-        //adds feedback telemetry to DS
+        // Display current status to DS
         telemetry.addData("Status", "Initialized");
         telemetry.update();
 
@@ -72,38 +72,36 @@ public class HardwareExample_TeleOp extends LinearOpMode {
 
         while (opModeIsActive()) {  // run until the end of the match (driver presses STOP)
 
-            telemetry.addLine(); //need to finish format
+            // Display gamepad values to DS
+            telemetry.addData("LeftStick_Y", gamepad1.left_stick_y);
+            telemetry.addData("RightStick_Y", gamepad1.right_stick_y);
+            telemetry.addData("Button_A", gamepad1.a);
+            telemetry.addData("Button_B", gamepad1.b);
             telemetry.update();
 
             // tank drive set to gamepad1 joysticks
-            //(note: The joystick goes negative when pushed forwards)
             robot.motorLeft.setPower(gamepad1.left_stick_y);
             robot.motorRight.setPower(gamepad1.right_stick_y);
 
             // Arm Control - Uses dual buttons to control motor direction
-            if(gamepad1.right_bumper)
-            {
+            if(gamepad1.right_bumper) {
                 robot.motorArm.setPower(-gamepad1.right_trigger); // if both Bumper + Trigger, then negative power, runs arm down
             }
-            else
-            {
+            else {
                 robot.motorArm.setPower(gamepad1.right_trigger);  // else trigger positive value, runs arm up
             }
 
             //servo commands
-            if(gamepad1.a) //button 'a' will open
-            {
+            if(gamepad1.a) {
                 robot.servoHandR.setPosition(robot.OPEN);
                 robot.servoHandL.setPosition(robot.OPEN);
             }
-            else if (gamepad1.b) //button 'b' will close
-            {
+            else if (gamepad1.b) {
                 robot.servoHandR.setPosition(robot.CLOSED);
                 robot.servoHandL.setPosition(robot.CLOSED);
             }
 
-
-            idle(); // Allows other parallel processes to run
+            idle(); // Allows other parallel processes to run before loop repeats
         }
     }
 }
