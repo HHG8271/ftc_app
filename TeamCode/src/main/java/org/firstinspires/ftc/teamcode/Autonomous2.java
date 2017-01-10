@@ -26,7 +26,7 @@ public class Autonomous2 extends LinearOpMode {
     DcMotor motor_right;
     Servo servo;
     boolean far= false;
-    double
+
     @Override
 
     public void runOpMode() throws InterruptedException {
