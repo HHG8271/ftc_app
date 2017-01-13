@@ -25,8 +25,12 @@ public class Autonomous2 extends LinearOpMode {
     DcMotor motor_left;
     DcMotor motor_right;
     Servo servo;
+    boolean seap=false;
+    boolean trap=false;
     boolean far= false;
-    double
+    double Left =.9;
+    double Right=.3;
+
     @Override
 
     public void runOpMode() throws InterruptedException {
@@ -81,6 +85,7 @@ public class Autonomous2 extends LinearOpMode {
         //Set servo hand grippers to open position.
         boolean val= false;
         boolean sar= false;
+        boolean but= false;
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
 
@@ -125,7 +130,7 @@ public class Autonomous2 extends LinearOpMode {
             telemetry.addData("Red  ", color_sensor.red());
             telemetry.update();
         }
-            while(sar=true){
+            while(sar=true) {
 
 
                 if(color_sensor.red()>10){
@@ -156,6 +161,13 @@ public class Autonomous2 extends LinearOpMode {
                 {
                    if(color_mid.red()>=6)
                    {
+                    servo.setPosition(Left);
+                       far=false;
+                   }
+                    else if(color_mid.red()<6)
+                   {
+                       servo.setPosition(Right);
+                       far=false;
 
                    }
 
@@ -163,16 +175,92 @@ public class Autonomous2 extends LinearOpMode {
                     telemetry.update();
 
                 }
+                motor_left.setPower(0);
+                motor_right.setPower(0);
+                Thread.sleep(500);
 
+                motor_right.setPower(-.5);
+                motor_left.setPower(-.5);
+                Thread.sleep(1000);
+
+                motor_left.setPower(0);
+                motor_right.setPower(0);
+                Thread.sleep(500);
+
+                motor_left.setPower(-.4);
+                motor_right.setPower(.4);
+                Thread.sleep(800);
+
+                motor_left.setPower(0);
+                motor_right.setPower(0);
+                Thread.sleep(500);
+                but =true;
+
+                while(but=true)
+                {
+
+                    if(color_sensor.red()<10 ) {
+                        motor_right.setPower(.3);
+                        motor_left.setPower(.3);
+                        telemetry.addData("Red",color_sensor.red());
+                        telemetry.update();
+
+                    }
+                    if(color_sensor.red()>10) {
+                        motor_right.setPower(0);
+                        motor_left.setPower(0);
+                        Thread.sleep(800);
+                        but = false;
+                        seap = true;
+                    }
+
+
+
+
+                }
+                while(seap=true)
+                {
+                    if(color_sensor.red()>10){
+
+                        motor_left.setPower(.3);
+                        motor_right.setPower(.3);
+                    }
+                    if(color_sensor.red()<10)
+                    {
+                        motor_left.setPower(0);
+                        motor_right.setPower(.3);
+
+                    }
+                    else if(RangeSensor.getDistance(DistanceUnit.CM)<10){
+                        motor_left.setPower(0);
+                        motor_right.setPower(0);
+                        seap=false;
+                        trap = true;
+                    }
+                    while(trap = true)
+                    {
+                        if(color_mid.red()>=6)
+                        {
+                            servo.setPosition(Left);
+                            trap=false;
+                        }
+                        else if(color_mid.red()<6)
+                        {
+                            servo.setPosition(Right);
+                            trap=false;
+
+                        }
+                    }
+                }
 
             }
 
             telemetry.addData("cm", "%.2f cm", RangeSensor.getDistance(DistanceUnit.CM));
             telemetry.addData("Red  ", color_sensor.red());
             telemetry.update();
-
+            idle();
         }
 
-idle();
+
     }
 }

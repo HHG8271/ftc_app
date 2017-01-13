@@ -14,6 +14,8 @@ public class TeleOp1 extends LinearOpMode
     //Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
     //motors
+    DcMotor SpinnyL = null;
+    DcMotor SpinnyR = null;
     DcMotor motorLeft = null;
     DcMotor motorRight = null;
     DcMotor motorFlick = null;
@@ -33,8 +35,8 @@ public class TeleOp1 extends LinearOpMode
         telemetry.addData("Status", "Initialized");
         telemetry.update();
 
-
-
+        SpinnyL = hardwareMap.dcMotor.get("spinnyl");
+        SpinnyR = hardwaremap.dcMotor.get("spinnyr");
         motorLeft  = hardwareMap.dcMotor.get("motor_left");
         motorRight = hardwareMap.dcMotor.get("motor_right");
         motorFlick = hardwareMap.dcMotor.get("motorFlick");
@@ -86,6 +88,23 @@ public class TeleOp1 extends LinearOpMode
             if (gamepad2.b)
             {
                 motorConveyor.setPower(1);
+            }
+            if (gamepad2.right_bumper)
+            {
+              SpinnyR.setPower(.5);
+              SpinnyL.setPower(.5);
+
+            }
+            if (gamepad2.left_bumper)
+            {
+                SpinnyL.setPower(-.2);
+                SpinnyR.setPower(-.2);
+
+            }
+            else
+            {
+                SpinnyL.setPower(0);
+                SpinnyR.setPower(0);
             }
             if(gamepad1.right_bumper)
             {
