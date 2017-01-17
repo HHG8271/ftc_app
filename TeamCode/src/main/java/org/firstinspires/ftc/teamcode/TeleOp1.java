@@ -36,7 +36,7 @@ public class TeleOp1 extends LinearOpMode
         telemetry.update();
 
         SpinnyL = hardwareMap.dcMotor.get("spinnyl");
-        SpinnyR = hardwaremap.dcMotor.get("spinnyr");
+        SpinnyR = hardwareMap.dcMotor.get("spinnyr");
         motorLeft  = hardwareMap.dcMotor.get("motor_left");
         motorRight = hardwareMap.dcMotor.get("motor_right");
         motorFlick = hardwareMap.dcMotor.get("motorFlick");
