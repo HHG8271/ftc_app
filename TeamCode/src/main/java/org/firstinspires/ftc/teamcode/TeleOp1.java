@@ -9,8 +9,7 @@ package org.firstinspires.ftc.teamcode;
         import com.qualcomm.robotcore.util.ElapsedTime;
 @TeleOp(name=" TeleOp1", group="Examples")  // @Autonomous(...) is the other common choice
 
-public class TeleOp1 extends LinearOpMode
-{
+public class TeleOp1 extends LinearOpMode {
     //Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
     //motors
@@ -20,7 +19,7 @@ public class TeleOp1 extends LinearOpMode
     DcMotor motorRight = null;
     DcMotor motorFlick = null;
     DcMotor motorConveyor = null;
-     Servo servo=null;
+    Servo servo = null;
     //servos
     // Servo servoHandL = null;
     //Servo servoHandR = null;
@@ -39,7 +38,7 @@ public class TeleOp1 extends LinearOpMode
 
         SpinnyL = hardwareMap.dcMotor.get("spinnyl");
         SpinnyR = hardwareMap.dcMotor.get("spinnyr");
-        motorLeft  = hardwareMap.dcMotor.get("motor_left");
+        motorLeft = hardwareMap.dcMotor.get("motor_left");
         motorRight = hardwareMap.dcMotor.get("motor_right");
         motorFlick = hardwareMap.dcMotor.get("motorFlick");
         motorConveyor = hardwareMap.dcMotor.get("motorConveyor");
@@ -57,7 +56,7 @@ public class TeleOp1 extends LinearOpMode
         //Set servo hand grippers to open position.
         // servoHandL.setPosition(OPEN);
         //servoHandR.setPosition(OPEN);
-          servo.setPosition(.5);
+        servo.setPosition(.5);
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
         runtime.reset();
@@ -70,57 +69,60 @@ public class TeleOp1 extends LinearOpMode
             telemetry.addData("Status", "Run Time: " + runtime.toString());
             telemetry.update();
 
-                // tank drive set to gamepad1 joysticks
-                //(note: The joystick goes negative when pushed forwards)
-                motorLeft.setPower(-gamepad1.left_stick_y);
-                motorRight.setPower(-gamepad1.right_stick_y);
-                if (gamepad1.x)
-                {
+            // tank drive set to gamepad1 joysticks
+            //(note: The joystick goes negative when pushed forwards)
+            motorLeft.setPower(-gamepad1.left_stick_y);
+            motorRight.setPower(-gamepad1.right_stick_y);
+            SpinnyR.setPower(gamepad2.right_trigger);
+            SpinnyL.setPower(gamepad2.left_trigger);
 
 
-                }
-                 // Arm Control - Uses dual buttons to control motor direction
-                if (gamepad2.a) {
-                    motorFlick.setPower(1); // if both Bumper + Trigger, then negative power, runs arm down
-                } else {
-                    motorFlick.setPower(0);  // else trigger positive value, runs arm up
-                }
-                if (gamepad2.y) {
-                    motorConveyor.setPower(-1);
-                }
-                if (gamepad2.x) {
-                    motorConveyor.setPower(0);
-                }
-                if (gamepad2.b) {
-                    motorConveyor.setPower(1);
-                }
-                if (gamepad2.right_bumper) {
-                    SpinnyR.setPower(.5);
-                    SpinnyL.setPower(.5);
+            // Arm Control - Uses dual buttons to control motor direction
+            if (gamepad2.a) {
+                motorFlick.setPower(1); // if both Bumper + Trigger, then negative power, runs arm down
+            } else {
+                motorFlick.setPower(0);  // else trigger positive value, runs arm up
+            }
+            if (gamepad2.y) {
+                motorConveyor.setPower(-1);
+            }
+            if (gamepad2.x) {
+                motorConveyor.setPower(0);
+            }
+            if (gamepad2.b) {
+                motorConveyor.setPower(1);
+            }
 
-                } else if (gamepad2.left_bumper) {
-                    SpinnyL.setPower(-.5);
-                    SpinnyR.setPower(-.5);
 
-                } else {
-                    SpinnyL.setPower(0);
-                    SpinnyR.setPower(0);
-                }
-                if (gamepad1.right_bumper) {
-                    servo.setPosition(.3);
 
-                } else if (gamepad1.left_bumper) {
-                    servo.setPosition(.7);
+            if (gamepad2.left_bumper) {
+                SpinnyL.setPower(-.3);
 
-                } else {
-                    servo.setPosition(.5);
-                }
+
+            }
+            if (gamepad2.right_bumper) {
+                SpinnyR.setPower(-.3);
+            } else {
+                SpinnyL.setPower(0);
+                SpinnyR.setPower(0);
+            }
+            if (gamepad1.right_bumper) {
+                servo.setPosition(.3);
+
+            } else if (gamepad1.left_bumper) {
+                servo.setPosition(.7);
+
+            } else {
+                servo.setPosition(.5);
+            }
 
 
             idle(); // Always call idle() at the bottom of your while(opModeIsActive()) loop
         }
     }
 }
+
+
 
 
 

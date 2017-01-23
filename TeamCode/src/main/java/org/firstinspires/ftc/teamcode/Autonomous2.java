@@ -55,10 +55,10 @@ public class Autonomous2 extends LinearOpMode {
         boolean bLedOn = true;
 
         // get a reference to our ColorSensor object.
-        color_mid =hardwareMap.colorSensor.get("color_mid");
-        color_sensor = hardwareMap.colorSensor.get("color_sensor");
+        color_mid =hardwareMap.colorSensor.get("color_sensor");
+        color_sensor = hardwareMap.colorSensor.get("color_mid");
         RangeSensor = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "sensor_range");
-        servo = hardwareMap.servo.get("servo");
+        servo = hardwareMap.servo.get("Servo");
         // Set the LED in the beginning
         color_sensor.enableLed(bLedOn);
         color_mid.enableLed(bLedOn);
@@ -111,10 +111,10 @@ public class Autonomous2 extends LinearOpMode {
              val=true;
 
 
-        while(val ){
-            if(color_sensor.red()<10 ) {
-                motor_right.setPower(.3);
-                motor_left.setPower(.3);
+            while(val){
+            if(color_sensor.red()<10) {
+                motor_right.setPower(.4);
+                motor_left.setPower(.4);
 
 
             }
@@ -126,35 +126,35 @@ public class Autonomous2 extends LinearOpMode {
                 sar=true;
             }
 
-            telemetry.addData("Red  ", color_sensor.red());
+            telemetry.addData("Floor Red", color_sensor.red());
+                telemetry.addData("Beacon Red",color_mid.red());
             telemetry.update();
         }
             while(sar) {
 
 
-                if(color_sensor.red()>10){
+                if (color_sensor.red() > 10) {
 
                     motor_left.setPower(.4);
                     motor_right.setPower(.4);
                 }
-                if(color_sensor.red()<10)
-                {
+                if (color_sensor.red() < 10) {
                     motor_left.setPower(0);
                     motor_right.setPower(.3);
 
-                }
-                else if(RangeSensor.getDistance(DistanceUnit.CM)<10){
+                } else if (RangeSensor.getDistance(DistanceUnit.CM) < 10) {
                     motor_left.setPower(0);
                     motor_right.setPower(0);
-                    sar=false;
+                    sar = false;
                     far = true;
                 }
-                telemetry.addData("cm optical", "%.2f. cm", RangeSensor.cmOptical());
+
                 telemetry.addData("cm", "%.2f cm", RangeSensor.getDistance(DistanceUnit.CM));
                 telemetry.addData("Red  ", color_sensor.red());
+                telemetry.addData("Beacon Red",color_mid.red());
                 telemetry.update();
-
-
+            }
+    Thread.sleep(700);
 
                 while(far=true)
                 {
@@ -171,6 +171,7 @@ public class Autonomous2 extends LinearOpMode {
                    }
 
                     telemetry.addData("Red  ", color_sensor.red());
+                    telemetry.addData("Beacon Red",color_mid.red());
                     telemetry.update();
 
                 }
@@ -201,8 +202,6 @@ public class Autonomous2 extends LinearOpMode {
                     if(color_sensor.red()<10 ) {
                         motor_right.setPower(.3);
                         motor_left.setPower(.3);
-                        telemetry.addData("Red",color_sensor.red());
-                        telemetry.update();
 
                     }
                     if(color_sensor.red()>10) {
@@ -213,29 +212,35 @@ public class Autonomous2 extends LinearOpMode {
                         seap = true;
                     }
 
+                    telemetry.addData("Red",color_sensor.red());
+                    telemetry.addData("Beacon Red",color_mid.red());
+                    telemetry.update();
 
 
 
                 }
-                while(seap=true)
-                {
-                    if(color_sensor.red()>10){
+                while(seap) {
+                    if (color_sensor.red() > 10) {
 
                         motor_left.setPower(.3);
                         motor_right.setPower(.3);
                     }
-                    if(color_sensor.red()<10)
-                    {
+                    if (color_sensor.red() < 10) {
                         motor_left.setPower(0);
                         motor_right.setPower(.3);
 
-                    }
-                    else if(RangeSensor.getDistance(DistanceUnit.CM)<10){
+                    } else if (RangeSensor.getDistance(DistanceUnit.CM) < 10) {
                         motor_left.setPower(0);
                         motor_right.setPower(0);
-                        seap=false;
+                        seap = false;
                         trap = true;
                     }
+                    telemetry.addData("Red",color_sensor.red());
+                    telemetry.addData("Beacon Red",color_mid.red());
+                    telemetry.addData("cm", "%.2f cm", RangeSensor.getDistance(DistanceUnit.CM));
+                    telemetry.update();
+
+                }
                     while(trap = true)
                     {
                         if(color_mid.red()>=6)
@@ -249,17 +254,18 @@ public class Autonomous2 extends LinearOpMode {
                             trap=false;
 
                         }
+                        telemetry.addData("Red",color_sensor.red());
+                        telemetry.addData("Beacon Red",color_mid.red());
+                        telemetry.update();
+
                     }
                 }
 
             }
 
-            telemetry.addData("cm", "%.2f cm", RangeSensor.getDistance(DistanceUnit.CM));
-            telemetry.addData("Red  ", color_sensor.red());
-            telemetry.update();
-            idle();
+
         }
 
 
-    }
-}
+
+
