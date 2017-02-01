@@ -8,6 +8,8 @@ import org.firstinspires.ftc.teamcode.ExampleCode.MyBotHardwareSetup;
 
 
 /**
+ *  Created by TeameurekaRobotics on 12/30/2016
+ *
  * This file contains an minimal example of a Linear Tele "OpMode".
  * The hardware configuration uses MyBotHardwareSetup.java
  *
