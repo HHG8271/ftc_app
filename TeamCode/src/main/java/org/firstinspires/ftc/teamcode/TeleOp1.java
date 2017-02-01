@@ -36,12 +36,12 @@ public class TeleOp1 extends LinearOpMode
         telemetry.update();
 
         SpinnyL = hardwareMap.dcMotor.get("spinnyl");
-        SpinnyR = hardwaremap.dcMotor.get("spinnyr");
+        SpinnyR = hardwareMap.dcMotor.get("spinnyr");
         motorLeft  = hardwareMap.dcMotor.get("motor_left");
         motorRight = hardwareMap.dcMotor.get("motor_right");
         motorFlick = hardwareMap.dcMotor.get("motorFlick");
         motorConveyor = hardwareMap.dcMotor.get("motorConveyor");
-        servo = hardwareMap.servo.get("Servo");
+        servo = hardwareMap.servo.get("servo");
         // servoHandL = hardwareMap.servo.get("servoHandL"); //assuming a pushBot configuration of two servo grippers
         //servoHandR = hardwareMap.servo.get("servoHandR");
 
