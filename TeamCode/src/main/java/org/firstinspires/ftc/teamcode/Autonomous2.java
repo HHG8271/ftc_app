@@ -92,7 +92,7 @@ public class Autonomous2 extends LinearOpMode {
         while (opModeIsActive()) {
 
 
-            motorFlick.setPower(1);
+            motorFlick.setPower(.8);
             Thread.sleep(1000);
 
             motorFlick.setPower(0);
@@ -106,23 +106,22 @@ public class Autonomous2 extends LinearOpMode {
 
             motor_left.setPower(.4);
             motor_right.setPower(-.4);
-            Thread.sleep(500);
+            Thread.sleep(700);
 
              val=true;
 
 
-        while(val==true ){
+        while(val ){
             if(color_sensor.red()<10 ) {
                 motor_right.setPower(.3);
                 motor_left.setPower(.3);
-                telemetry.addData("Red",color_sensor.red());
-                telemetry.update();
+
 
             }
-            if(color_sensor.red()>10) {
+             else if(color_sensor.red()>10) {
                 motor_right.setPower(0);
                 motor_left.setPower(0);
-                Thread.sleep(800);
+                Thread.sleep(500);
                 val=false;
                 sar=true;
             }
@@ -130,13 +129,13 @@ public class Autonomous2 extends LinearOpMode {
             telemetry.addData("Red  ", color_sensor.red());
             telemetry.update();
         }
-            while(sar=true) {
+            while(sar) {
 
 
                 if(color_sensor.red()>10){
 
-                    motor_left.setPower(.3);
-                    motor_right.setPower(.3);
+                    motor_left.setPower(.4);
+                    motor_right.setPower(.4);
                 }
                 if(color_sensor.red()<10)
                 {
@@ -196,7 +195,7 @@ public class Autonomous2 extends LinearOpMode {
                 Thread.sleep(500);
                 but =true;
 
-                while(but=true)
+                while(but)
                 {
 
                     if(color_sensor.red()<10 ) {

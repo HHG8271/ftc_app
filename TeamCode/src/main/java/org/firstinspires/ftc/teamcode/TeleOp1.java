@@ -28,6 +28,8 @@ public class TeleOp1 extends LinearOpMode
     //Create and set default hand positions variables. To be determined based on your build
     double CLOSED = 0.2;
     double OPEN = 0.8;
+    boolean Reverse = false;
+    boolean Standard = true;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -68,58 +70,52 @@ public class TeleOp1 extends LinearOpMode
             telemetry.addData("Status", "Run Time: " + runtime.toString());
             telemetry.update();
 
-            // tank drive set to gamepad1 joysticks
-            //(note: The joystick goes negative when pushed forwards)
-            motorLeft.setPower(-gamepad1.left_stick_y);
-            motorRight.setPower(-gamepad1.right_stick_y);
+                // tank drive set to gamepad1 joysticks
+                //(note: The joystick goes negative when pushed forwards)
+                motorLeft.setPower(-gamepad1.left_stick_y);
+                motorRight.setPower(-gamepad1.right_stick_y);
+                if (gamepad1.x)
+                {
 
-            // Arm Control - Uses dual buttons to control motor direction
-            if (gamepad2.a) {
-                motorFlick.setPower(1); // if both Bumper + Trigger, then negative power, runs arm down
-            } else {
-                motorFlick.setPower(0);  // else trigger positive value, runs arm up
-            }
-            if (gamepad2.y) {
-                motorConveyor.setPower(-1);
-            }
-            if (gamepad2.x) {
-                motorConveyor.setPower(0);
-            }
-            if (gamepad2.b)
-            {
-                motorConveyor.setPower(1);
-            }
-            if (gamepad2.right_bumper)
-            {
-              SpinnyR.setPower(.5);
-              SpinnyL.setPower(.5);
 
-            }
-            if (gamepad2.left_bumper)
-            {
-                SpinnyL.setPower(-.2);
-                SpinnyR.setPower(-.2);
+                }
+                 // Arm Control - Uses dual buttons to control motor direction
+                if (gamepad2.a) {
+                    motorFlick.setPower(1); // if both Bumper + Trigger, then negative power, runs arm down
+                } else {
+                    motorFlick.setPower(0);  // else trigger positive value, runs arm up
+                }
+                if (gamepad2.y) {
+                    motorConveyor.setPower(-1);
+                }
+                if (gamepad2.x) {
+                    motorConveyor.setPower(0);
+                }
+                if (gamepad2.b) {
+                    motorConveyor.setPower(1);
+                }
+                if (gamepad2.right_bumper) {
+                    SpinnyR.setPower(.5);
+                    SpinnyL.setPower(.5);
 
-            }
-            else
-            {
-                SpinnyL.setPower(0);
-                SpinnyR.setPower(0);
-            }
-            if(gamepad1.right_bumper)
-            {
-               servo.setPosition(.3) ;
+                } else if (gamepad2.left_bumper) {
+                    SpinnyL.setPower(-.5);
+                    SpinnyR.setPower(-.5);
 
-            }
-            else if (gamepad1.left_bumper)
-            {
-               servo.setPosition(.7)  ;
+                } else {
+                    SpinnyL.setPower(0);
+                    SpinnyR.setPower(0);
+                }
+                if (gamepad1.right_bumper) {
+                    servo.setPosition(.3);
 
-            }
-            else
-            {
-                servo.setPosition(.5);
-            }
+                } else if (gamepad1.left_bumper) {
+                    servo.setPosition(.7);
+
+                } else {
+                    servo.setPosition(.5);
+                }
+
 
             idle(); // Always call idle() at the bottom of your while(opModeIsActive()) loop
         }
