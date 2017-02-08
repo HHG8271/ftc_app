@@ -1,7 +1,8 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.ExampleCode;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.firstinspires.ftc.teamcode.BeastHardwareSetup;
 import org.firstinspires.ftc.teamcode.ExampleCode.MyBotHardwareSetup;
 import org.lasarobotics.vision.android.Cameras;
 import org.lasarobotics.vision.opmode.LinearVisionOpMode;
@@ -17,11 +18,11 @@ import org.opencv.core.Size;
  */
 
 
-@TeleOp(name = "MyBeaconAuto", group = "Test")
-//@Disabled
-public class RobBeaconAuto extends LinearVisionOpMode {
+@TeleOp(name = "robBeaconAuto", group = "Test")
 
-    BeastHardwareSetup robot = new BeastHardwareSetup(); //set up remote to robot hardware configuration
+public class RobBeaconAuto extends LinearVisionOpMode() {
+
+    BeastHardwareSetup savage = new BeastHardwareSetup(); //set up remote to robot hardware configuration
 
     // @Override
     public void runOpMode() throws InterruptedException {
@@ -36,7 +37,7 @@ public class RobBeaconAuto extends LinearVisionOpMode {
         final  double NEUTRAL = 0.5;
         final  double MOTOR_STOP = 0.0; // sets motor power to zero
 
-        robot.init(hardwareMap);
+
 
         //waitForVisionStart();
 
@@ -87,16 +88,16 @@ public class RobBeaconAuto extends LinearVisionOpMode {
         if (beaconVals[0].equals("red")) { //reads first array position, noted as zero, as "red" Array is... "???,???"
 
             //push red button
-            robot.motorArm.setPower(0.5);
+
         }
         else {
 
             //push blue button
-            robot.motorArm.setPower(-0.5);
+
         }
 
         Thread.sleep(3000); // keeps motorArm running for 3 sec then stops
-        robot.motorArm.setPower(0.0);
+
 
         //
         // Place any additional set of autonomous code here.
@@ -135,8 +136,7 @@ public class RobBeaconAuto extends LinearVisionOpMode {
 
     public void DriveForward(double power)
     {
-        robot.motorLeft.setPower(power);
-        robot.motorRight.setPower(power);
+
     }
 
     public void DriveForwardTime(double power, long time) throws InterruptedException
@@ -157,9 +157,7 @@ public class RobBeaconAuto extends LinearVisionOpMode {
 
     public void TurnLeft(double power, long time) throws InterruptedException
     {
-        robot.motorLeft.setPower(-power);
-        robot.motorRight.setPower(power);
-        Thread.sleep(time);
+
     }
 
     public void TurnRight(double power, long time) throws InterruptedException

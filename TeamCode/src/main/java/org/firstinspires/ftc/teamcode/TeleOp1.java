@@ -19,14 +19,15 @@ public class TeleOp1 extends LinearOpMode {
     DcMotor motorRight = null;
     DcMotor motorFlick = null;
     DcMotor motorConveyor = null;
-    Servo servo = null;
+    DcMotor motorPusher = null;
+    Servo hook = null;
     //servos
     // Servo servoHandL = null;
     //Servo servoHandR = null;
 
     //Create and set default hand positions variables. To be determined based on your build
-    double CLOSED = 0.2;
-    double OPEN = 0.8;
+    double CLOSED = 0.8;
+    double OPEN = 0.2;
     boolean Reverse = false;
     boolean Standard = true;
 
@@ -42,7 +43,8 @@ public class TeleOp1 extends LinearOpMode {
         motorRight = hardwareMap.dcMotor.get("motor_right");
         motorFlick = hardwareMap.dcMotor.get("motorFlick");
         motorConveyor = hardwareMap.dcMotor.get("motorConveyor");
-        servo = hardwareMap.servo.get("Servo");
+        motorPusher = hardwareMap.dcMotor.get("motorPusher");
+        hook = hardwareMap.servo.get("hook");
         // servoHandL = hardwareMap.servo.get("servoHandL"); //assuming a pushBot configuration of two servo grippers
         //servoHandR = hardwareMap.servo.get("servoHandR");
 
@@ -56,7 +58,9 @@ public class TeleOp1 extends LinearOpMode {
         //Set servo hand grippers to open position.
         // servoHandL.setPosition(OPEN);
         //servoHandR.setPosition(OPEN);
-        servo.setPosition(.5);
+        hook.setPosition(.65);
+
+
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
         runtime.reset();
@@ -73,9 +77,21 @@ public class TeleOp1 extends LinearOpMode {
             //(note: The joystick goes negative when pushed forwards)
             motorLeft.setPower(-gamepad1.left_stick_y);
             motorRight.setPower(-gamepad1.right_stick_y);
-            SpinnyR.setPower(gamepad2.right_trigger);
-            SpinnyL.setPower(gamepad2.left_trigger);
 
+
+            if (gamepad1.right_bumper) {
+                motorPusher.setPower(0.5);
+            }
+
+             else if (gamepad1.left_bumper) {
+                motorPusher.setPower(-0.5);
+
+            } else {
+                motorPusher.setPower(0);
+            }
+            if (gamepad1.b) {
+                hook.setPosition(.1);
+            }
 
             // Arm Control - Uses dual buttons to control motor direction
             if (gamepad2.a) {
@@ -92,28 +108,16 @@ public class TeleOp1 extends LinearOpMode {
             if (gamepad2.b) {
                 motorConveyor.setPower(1);
             }
-
-
-
             if (gamepad2.left_bumper) {
-                SpinnyL.setPower(-.3);
+                SpinnyL.setPower(-.4);
 
 
-            }
-            if (gamepad2.right_bumper) {
-                SpinnyR.setPower(-.3);
+            } else if (gamepad2.right_bumper) {
+                SpinnyR.setPower(-.4);
             } else {
-                SpinnyL.setPower(0);
-                SpinnyR.setPower(0);
-            }
-            if (gamepad1.right_bumper) {
-                servo.setPosition(.3);
 
-            } else if (gamepad1.left_bumper) {
-                servo.setPosition(.7);
-
-            } else {
-                servo.setPosition(.5);
+                SpinnyL.setPower(gamepad2.right_trigger);
+                SpinnyR.setPower(gamepad2.left_trigger);
             }
 
 
@@ -121,6 +125,7 @@ public class TeleOp1 extends LinearOpMode {
         }
     }
 }
+
 
 
 

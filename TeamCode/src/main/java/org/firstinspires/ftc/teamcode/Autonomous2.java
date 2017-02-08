@@ -25,11 +25,11 @@ public class Autonomous2 extends LinearOpMode {
     DcMotor motor_left;
     DcMotor motor_right;
     Servo servo;
-    boolean seap=false;
-    boolean trap=false;
-    boolean far= false;
-    double Left =.9;
-    double Right=.3;
+    boolean seap = false;
+    boolean trap = false;
+    boolean far = false;
+    double Left = .9;
+    double Right = .3;
 
     @Override
 
@@ -55,7 +55,7 @@ public class Autonomous2 extends LinearOpMode {
         boolean bLedOn = true;
 
         // get a reference to our ColorSensor object.
-        color_mid =hardwareMap.colorSensor.get("color_sensor");
+        color_mid = hardwareMap.colorSensor.get("color_sensor");
         color_sensor = hardwareMap.colorSensor.get("color_mid");
         RangeSensor = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "sensor_range");
         servo = hardwareMap.servo.get("Servo");
@@ -83,9 +83,9 @@ public class Autonomous2 extends LinearOpMode {
         motor_left.setDirection(DcMotor.Direction.REVERSE);
         motor_right.setDirection(DcMotor.Direction.FORWARD);
         //Set servo hand grippers to open position.
-        boolean val= false;
-        boolean sar= false;
-        boolean but= false;
+        boolean val = false;
+        boolean sar = false;
+        boolean but = false;
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
 
@@ -102,170 +102,15 @@ public class Autonomous2 extends LinearOpMode {
             Thread.sleep(1000);
 
             motorFlick.setPower(0);
-            Thread.sleep(1000);
+            Thread.sleep(20000);
 
-            motor_left.setPower(.4);
-            motor_right.setPower(-.4);
-            Thread.sleep(700);
-
-             val=true;
-
-
-            while(val){
-            if(color_sensor.red()<10) {
-                motor_right.setPower(.4);
-                motor_left.setPower(.4);
-
-
-            }
-             else if(color_sensor.red()>10) {
-                motor_right.setPower(0);
-                motor_left.setPower(0);
-                Thread.sleep(500);
-                val=false;
-                sar=true;
-            }
-
-            telemetry.addData("Floor Red", color_sensor.red());
-                telemetry.addData("Beacon Red",color_mid.red());
-            telemetry.update();
-        }
-            while(sar) {
-
-
-                if (color_sensor.red() > 10) {
-
-                    motor_left.setPower(.4);
-                    motor_right.setPower(.4);
-                }
-                if (color_sensor.red() < 10) {
-                    motor_left.setPower(0);
-                    motor_right.setPower(.3);
-
-                } else if (RangeSensor.getDistance(DistanceUnit.CM) < 10) {
-                    motor_left.setPower(0);
-                    motor_right.setPower(0);
-                    sar = false;
-                    far = true;
-                }
-
-                telemetry.addData("cm", "%.2f cm", RangeSensor.getDistance(DistanceUnit.CM));
-                telemetry.addData("Red  ", color_sensor.red());
-                telemetry.addData("Beacon Red",color_mid.red());
-                telemetry.update();
-            }
-    Thread.sleep(700);
-
-                while(far=true)
-                {
-                   if(color_mid.red()>=6)
-                   {
-                    servo.setPosition(Left);
-                       far=false;
-                   }
-                    else if(color_mid.red()<6)
-                   {
-                       servo.setPosition(Right);
-                       far=false;
-
-                   }
-
-                    telemetry.addData("Red  ", color_sensor.red());
-                    telemetry.addData("Beacon Red",color_mid.red());
-                    telemetry.update();
-
-                }
-                motor_left.setPower(0);
-                motor_right.setPower(0);
-                Thread.sleep(500);
-
-                motor_right.setPower(-.5);
-                motor_left.setPower(-.5);
-                Thread.sleep(1000);
-
-                motor_left.setPower(0);
-                motor_right.setPower(0);
-                Thread.sleep(500);
-
-                motor_left.setPower(-.4);
-                motor_right.setPower(.4);
-                Thread.sleep(800);
-
-                motor_left.setPower(0);
-                motor_right.setPower(0);
-                Thread.sleep(500);
-                but =true;
-
-                while(but)
-                {
-
-                    if(color_sensor.red()<10 ) {
-                        motor_right.setPower(.3);
-                        motor_left.setPower(.3);
-
-                    }
-                    if(color_sensor.red()>10) {
-                        motor_right.setPower(0);
-                        motor_left.setPower(0);
-                        Thread.sleep(800);
-                        but = false;
-                        seap = true;
-                    }
-
-                    telemetry.addData("Red",color_sensor.red());
-                    telemetry.addData("Beacon Red",color_mid.red());
-                    telemetry.update();
-
-
-
-                }
-                while(seap) {
-                    if (color_sensor.red() > 10) {
-
-                        motor_left.setPower(.3);
-                        motor_right.setPower(.3);
-                    }
-                    if (color_sensor.red() < 10) {
-                        motor_left.setPower(0);
-                        motor_right.setPower(.3);
-
-                    } else if (RangeSensor.getDistance(DistanceUnit.CM) < 10) {
-                        motor_left.setPower(0);
-                        motor_right.setPower(0);
-                        seap = false;
-                        trap = true;
-                    }
-                    telemetry.addData("Red",color_sensor.red());
-                    telemetry.addData("Beacon Red",color_mid.red());
-                    telemetry.addData("cm", "%.2f cm", RangeSensor.getDistance(DistanceUnit.CM));
-                    telemetry.update();
-
-                }
-                    while(trap = true)
-                    {
-                        if(color_mid.red()>=6)
-                        {
-                            servo.setPosition(Left);
-                            trap=false;
-                        }
-                        else if(color_mid.red()<6)
-                        {
-                            servo.setPosition(Right);
-                            trap=false;
-
-                        }
-                        telemetry.addData("Red",color_sensor.red());
-                        telemetry.addData("Beacon Red",color_mid.red());
-                        telemetry.update();
-
-                    }
-                }
-
-            }
 
 
         }
 
 
+    }
 
+
+}
 

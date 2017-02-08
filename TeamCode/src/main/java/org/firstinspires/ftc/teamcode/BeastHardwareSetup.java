@@ -2,6 +2,8 @@
 package org.firstinspires.ftc.teamcode;
 
 
+import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.GyroSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -29,23 +31,30 @@ public class BeastHardwareSetup {
     */
 
     //motors
-    public DcMotor motorLeft = null;
-    public DcMotor motorRight = null;
-    public DcMotor motorArm = null;
+    public DcMotor motor_left = null;
+
+    public DcMotor motor_right = null;
+    public DcMotor motorConveyor = null;
+    public DcMotor motorFlick = null;
+    public DcMotor SpinnyR = null;
+    public DcMotor SpinnyL = null;
 
     //servos
-  //  public Servo servoHandL = null;
+ public Servo servo = null;
   //  public Servo servoHandR = null;
 
     //sensors
    // public GyroSensor gyro  = null;
+    ColorSensor color_sensor;
+    ColorSensor color_mid;
+    ModernRoboticsI2cRangeSensor RangeSensor;
 
     /* local OpMode members. */
     HardwareMap hwMap        = null;
 
     //Create and set desired variables, i.e. default hand positions. To be determined based on your build
-    final static double CLOSED = 0.2;
-    final static double OPEN = 0.8;
+    final static double Right = 0.3;
+    final static double Left= 0.9;
     final static double MOTOR_STOP = 0.0; // sets motor power to zero
 
    /* Constructor   // this is not required as JAVA does it for you, but useful if you want to add
@@ -63,32 +72,36 @@ public class BeastHardwareSetup {
          * MOTOR SECTION
          ************************************************************/
         // Define Motors to match Robot Configuration File
-        motorLeft = hwMap.dcMotor.get("motor_left");
-        motorRight = hwMap.dcMotor.get("motor_right");
-        motorArm = hwMap.dcMotor.get("motorConveyor");
+        motor_left = hwMap.dcMotor.get("motor_left");
+        motor_right= hwMap.dcMotor.get("motor_right");
+        motorConveyor = hwMap.dcMotor.get("motorConveyor");
+        motorFlick = hwMap.dcMotor.get("motorFlick");
+        color_mid =hwMap.colorSensor.get("color_sensor");
+        color_sensor = hwMap.colorSensor.get("color_mid");
+        RangeSensor = hwMap.get(ModernRoboticsI2cRangeSensor.class, "sensor_range");
 
 
         // Set the drive motor directions:
-        motorLeft.setDirection(DcMotor.Direction.FORWARD); // Set to REVERSE if using AndyMark motors
-        motorRight.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
-        motorArm.setDirection(DcMotor.Direction.FORWARD); // Can change based on motor configuration
+        motor_left.setDirection(DcMotor.Direction.FORWARD); // Set to REVERSE if using AndyMark motors
+        motor_right.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
+        motorFlick.setDirection(DcMotor.Direction.FORWARD);
+        motorConveyor.setDirection(DcMotor.Direction.FORWARD);
+        // Can change based on motor configuration
 
         //Keep the motors from moving during initialize.
-        motorLeft.setPower(MOTOR_STOP);
-        motorRight.setPower(MOTOR_STOP);
-        motorArm.setPower(MOTOR_STOP);
+        motor_left.setPower(MOTOR_STOP);
+        motor_right.setPower(MOTOR_STOP);
+        motorFlick.setPower(MOTOR_STOP);
 
         // Set motors to run USING or WITHOUT encoders
         // Depending upon your configuration and use
-        motorArm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        motorRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        motorLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
 
         /************************************************************
          * SERVO SECTION
          ************************************************************/
         // Define Motors to match Robot Configuration File
-        //servoHandL = hwMap.servo.get("Servo");
+        servo = hwMap.servo.get("Servo");
        // servoHandR = hwMap.servo.get("servoHandR");
 
         //Set servo hand grippers to open position.
