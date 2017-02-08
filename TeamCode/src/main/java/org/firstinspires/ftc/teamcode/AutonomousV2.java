@@ -41,6 +41,7 @@ public class AutonomousV2 extends LinearOpMode {
     //sensors
     // public GyroSensor gyro  = null;
     ColorSensor color_sensor;
+    OpticalDistanceSensor ODS;
 
     private ElapsedTime runtime = new ElapsedTime();
 
@@ -50,9 +51,6 @@ public class AutonomousV2 extends LinearOpMode {
     //Create and set desired variables, i.e. default hand positions. To be determined based on your build
 
     final static double MOTOR_STOP = 0.0; // sets motor power to zero
-
-    OpticalDistanceSensor lightSensor;   //  Modern Robotics ODS sensor
-
     //light sensor variables
     static final double WHITE_THRESHOLD = 0.2;  // spans between 0.1 - 0.5 from dark to light
     static final double APPROACH_SPEED = 0.5;  // adjust to desired motor speed ( 0.0 - 1.0 )
@@ -63,7 +61,7 @@ public class AutonomousV2 extends LinearOpMode {
     static final double COUNTS_PER_INCH = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
             (WHEEL_DIAMETER_INCHES * 3.1415);
     static final double DRIVE_SPEED = 0.6;
-    static final double TURN_SPEED = 0.5;
+    static final double TURN_SPEED = 0.4;
 
 
     public void runOpMode() throws InterruptedException {
@@ -112,11 +110,20 @@ public class AutonomousV2 extends LinearOpMode {
 
         motorFlick.setPower(MOTOR_STOP);// turns off Flick
 
-        encoderDrive(DRIVE_SPEED,  48,  48, 5.0);
+        encoderDrive(TURN_SPEED,  5,  5, 3.0);
 
+        if( ODS.getLightDetected()>WHITE_THRESHOLD) {
+           while(true) {
+               motor_right.setPower(.5);
+               motor_left.setPower(.5);
+           }
 
+        }
+        else
+        {
+            motor_right.setPower(MOTOR_STOP);
 
-
+        }
 
 
     }
