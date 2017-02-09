@@ -1,3 +1,4 @@
+/*
 package org.firstinspires.ftc.teamcode.ExampleCode;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -10,12 +11,14 @@ import org.lasarobotics.vision.opmode.extensions.CameraControlExtension;
 import org.lasarobotics.vision.util.ScreenOrientation;
 import org.opencv.core.Size;
 
+*/
 /**
  * Basic example for using Vision program in autonomous code
  * Creating TEST BED example program
  * with demo programing
  *
- */
+ *//*
+
 
 
 @TeleOp(name = "robBeaconAuto", group = "Test")
@@ -130,7 +133,9 @@ public class RobBeaconAuto extends LinearVisionOpMode() {
 
     }//readBeacon
 
-    /** Below: Basic Drive Methods used in Autonomous code...**/
+    */
+/** Below: Basic Drive Methods used in Autonomous code...**//*
+
     //set Drive Power variable
     double DRIVE_POWER = 1.0;
 
@@ -176,3 +181,4 @@ public class RobBeaconAuto extends LinearVisionOpMode() {
     }
 
 }//MyBasicVisionSample
+*/

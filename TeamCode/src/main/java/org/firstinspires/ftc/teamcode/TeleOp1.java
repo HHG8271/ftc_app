@@ -3,8 +3,10 @@ package org.firstinspires.ftc.teamcode;
         import com.qualcomm.robotcore.eventloop.opmode.Disabled;
         import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
         import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+        import com.qualcomm.robotcore.hardware.ColorSensor;
         import com.qualcomm.robotcore.hardware.DcMotor;
         import com.qualcomm.robotcore.hardware.DcMotorSimple;
+        import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
         import com.qualcomm.robotcore.hardware.Servo;
         import com.qualcomm.robotcore.util.ElapsedTime;
 @TeleOp(name=" TeleOp1", group="Examples")  // @Autonomous(...) is the other common choice
@@ -21,6 +23,13 @@ public class TeleOp1 extends LinearOpMode {
     DcMotor motorConveyor = null;
     DcMotor motorPusher = null;
     Servo hook = null;
+    public ColorSensor color_sensor;
+    public OpticalDistanceSensor ODSRR;
+    public OpticalDistanceSensor ODSRF;
+    public OpticalDistanceSensor ODSLF;
+    public OpticalDistanceSensor ODSLR;
+
+
     //servos
     // Servo servoHandL = null;
     //Servo servoHandR = null;
@@ -36,7 +45,8 @@ public class TeleOp1 extends LinearOpMode {
         //adds feedback telemetry to DS
         telemetry.addData("Status", "Initialized");
         telemetry.update();
-
+        color_sensor = hardwareMap.colorSensor.get("color_sensor");
+        color_sensor.enableLed(false);
         SpinnyL = hardwareMap.dcMotor.get("spinnyl");
         SpinnyR = hardwareMap.dcMotor.get("spinnyr");
         motorLeft = hardwareMap.dcMotor.get("motor_left");
@@ -45,6 +55,11 @@ public class TeleOp1 extends LinearOpMode {
         motorConveyor = hardwareMap.dcMotor.get("motorConveyor");
         motorPusher = hardwareMap.dcMotor.get("motorPusher");
         hook = hardwareMap.servo.get("hook");
+        ODSLR = hardwareMap.opticalDistanceSensor.get("LR");
+        ODSLF = hardwareMap.opticalDistanceSensor.get("LF"); /// SWITCH CONFIGURATION FROM LEFT() TO RIGHT()
+        ODSRF = hardwareMap.opticalDistanceSensor.get("RF");
+        ODSRF = hardwareMap.opticalDistanceSensor.get("RR");
+
         // servoHandL = hardwareMap.servo.get("servoHandL"); //assuming a pushBot configuration of two servo grippers
         //servoHandR = hardwareMap.servo.get("servoHandR");
 
@@ -71,6 +86,13 @@ public class TeleOp1 extends LinearOpMode {
 
         while (opModeIsActive()) {  // run until the end of the match (driver presses STOP)
             telemetry.addData("Status", "Run Time: " + runtime.toString());
+            telemetry.addData("red",color_sensor.red());
+            telemetry.addData("blue",color_sensor.blue());
+            telemetry.addData("RIGHT REAR:",  ODSRR.getLightDetected());
+            telemetry.addData("LEFT REAR:",  ODSLR.getLightDetected());
+            telemetry.addData("RIGHT FRONT",  ODSRF.getLightDetected());
+            telemetry.addData("LEFT FRONT",  ODSLF.getLightDetected());
+
             telemetry.update();
 
             // tank drive set to gamepad1 joysticks

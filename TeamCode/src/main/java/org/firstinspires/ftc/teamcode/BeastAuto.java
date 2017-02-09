@@ -9,6 +9,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -24,8 +25,8 @@ import org.opencv.core.Size;
 /**
  * Created by user on 1/24/2017.
  */
-@Autonomous(name = "MyBeaconAuto", group = "Test")
-public class AutonomousV2 extends LinearOpMode {
+@Autonomous(name = "BeastAuto", group = "Test")
+public class BeastAuto extends LinearOpMode {
     public DcMotor motor_left = null;
     public DcMotor motor_right = null;
     public DcMotor motorConveyor = null;
@@ -40,17 +41,17 @@ public class AutonomousV2 extends LinearOpMode {
 
     //sensors
     // public GyroSensor gyro  = null;
-    ColorSensor color_sensor;
-    OpticalDistanceSensor ODS;
+    public ColorSensor color_sensor;
+    public OpticalDistanceSensor ODSRR;
+    public OpticalDistanceSensor ODSRF;
+    public OpticalDistanceSensor ODSLF;
+    public OpticalDistanceSensor ODSLR;
 
-    private ElapsedTime runtime = new ElapsedTime();
-
-    /* local OpMode members. */
 
 
     //Create and set desired variables, i.e. default hand positions. To be determined based on your build
-
     final static double MOTOR_STOP = 0.0; // sets motor power to zero
+
     //light sensor variables
     static final double WHITE_THRESHOLD = 0.2;  // spans between 0.1 - 0.5 from dark to light
     static final double APPROACH_SPEED = 0.5;  // adjust to desired motor speed ( 0.0 - 1.0 )
@@ -88,45 +89,63 @@ public class AutonomousV2 extends LinearOpMode {
         motorFlick = hardwareMap.dcMotor.get("motorFlick");
         motor_right = hardwareMap.dcMotor.get("motor_right");
         motor_left = hardwareMap.dcMotor.get("motor_left");
+        ODSRR = hardwareMap.opticalDistanceSensor.get("RR");
+        ODSRF = hardwareMap.opticalDistanceSensor.get("RF");
+        ODSLF = hardwareMap.opticalDistanceSensor.get("LF");
+        ODSLR = hardwareMap.opticalDistanceSensor.get("LR");
 
         // "Reverse" the motor that runs backwards when connected directly to the battery
 
         motorFlick.setDirection(DcMotor.Direction.FORWARD); // Can change based on motor configuration
-        motor_left.setDirection(DcMotor.Direction.REVERSE);
-        motor_right.setDirection(DcMotor.Direction.FORWARD);
+        motor_left.setDirection(DcMotor.Direction.FORWARD);
+        motor_right.setDirection(DcMotor.Direction.REVERSE);
 
 
-
+///////////////////////////
+        //BEGIN
+///////////////////////////
         waitForStart();
 
         motorFlick.setPower(1);   // FIRE!!!
         Thread.sleep(1000);
 
-        motorFlick.setPower(0);
+        motorFlick.setPower(MOTOR_STOP);  //pause to load next particle
         Thread.sleep(500);
 
-        motorFlick.setPower(1);
+        motorFlick.setPower(1);  //FIRE 2!!!
         Thread.sleep(800);
 
         motorFlick.setPower(MOTOR_STOP);// turns off Flick
 
-        encoderDrive(TURN_SPEED,  5,  5, 3.0);
+//        encoderDrive(TURN_SPEED,  5,  0, 3.0); //turns towards beacon
 
-        if( ODS.getLightDetected()>WHITE_THRESHOLD) {
-           while(true) {
-               motor_right.setPower(.5);
-               motor_left.setPower(.5);
-           }
+        // Once Start is pressed the robot begins moving forward, and then enters while loop looking for a white line threshold.
+        motor_left.setPower(.4);
+        motor_right.setPower(.4);
 
+        // run until the white line is seen OR the driver presses STOP;
+        // will continue to display Light Level values
+        while ( ODSRR.getLightDetected() < WHITE_THRESHOLD) {
+
+            // Continue displaying the light level while we are looking for the line threshold value
+            telemetry.addData("RIGHT REAR:",  ODSRR.getLightDetected());
+            telemetry.addData("LEFT REAR:",  ODSLR.getLightDetected());
+            telemetry.addData("RIGHT FRONT",  ODSRF.getLightDetected());
+            telemetry.addData("LEFT FRONT",  ODSLF.getLightDetected());
+            telemetry.update();
         }
-        else
-        {
-            motor_right.setPower(MOTOR_STOP);
 
-        }
+        // Stop all motors
+        motor_left.setPower(MOTOR_STOP);
+        motor_right.setPower(MOTOR_STOP);
+        sleep(500);     // pause for 1/2 sec to allow motors to fully stop
+
 
 
     }
+//////////////////////////
+//ENCODER DRIVE METHOD........
+//////////////////////////
     public void encoderDrive(double speed,
                              double leftInches, double rightInches,
                              double timeoutS) {
@@ -135,6 +154,8 @@ public class AutonomousV2 extends LinearOpMode {
 
         // Ensure that the opmode is still active
         if (opModeIsActive()) {
+            motor_left.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            motor_right.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
             // Determine new target position, and pass to motor controller
             newLeftTarget = motor_left.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
@@ -151,9 +172,7 @@ public class AutonomousV2 extends LinearOpMode {
             motor_right.setPower(Math.abs(speed));
 
             // keep looping while we are still active, and there is time left, and both motors are running.
-            while (opModeIsActive() &&
-                    (runtime.seconds() < timeoutS) &&
-                    (motor_left.isBusy() && motor_right.isBusy())) {
+            while (opModeIsActive() && (motor_left.isBusy() && motor_right.isBusy())) {
 
                 // Display it for the driver.
                 telemetry.addData("Path1",  "Running to %7d :%7d", newLeftTarget,  newRightTarget);
@@ -171,7 +190,7 @@ public class AutonomousV2 extends LinearOpMode {
             motor_left.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             motor_right.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-            //  sleep(250);   // optional pause after each move
+            sleep(250);   // optional pause after each move
         }
     }
 }
