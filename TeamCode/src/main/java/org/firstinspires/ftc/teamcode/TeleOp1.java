@@ -58,6 +58,7 @@ public class TeleOp1 extends LinearOpMode {
         motorRight = hardwareMap.dcMotor.get("motor_right");
         motorFlick = hardwareMap.dcMotor.get("motorFlick");
         motorConveyor = hardwareMap.dcMotor.get("motorConveyor");
+<<<<<<< HEAD
         motorPusher = hardwareMap.dcMotor.get("Press");
         hook = hardwareMap.servo.get("hook");
         ODSLR = hardwareMap.opticalDistanceSensor.get("LR");
@@ -66,6 +67,9 @@ public class TeleOp1 extends LinearOpMode {
         ODSRF = hardwareMap.opticalDistanceSensor.get("RR");
 
 
+=======
+        servo = hardwareMap.servo.get("servo");
+>>>>>>> origin/master
         // servoHandL = hardwareMap.servo.get("servoHandL"); //assuming a pushBot configuration of two servo grippers
         //servoHandR = hardwareMap.servo.get("servoHandR");
 
