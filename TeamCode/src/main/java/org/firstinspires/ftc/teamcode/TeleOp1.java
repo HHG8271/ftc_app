@@ -1,14 +1,17 @@
 package org.firstinspires.ftc.teamcode;
 
-        import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+
+
         import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
         import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
         import com.qualcomm.robotcore.hardware.ColorSensor;
         import com.qualcomm.robotcore.hardware.DcMotor;
-        import com.qualcomm.robotcore.hardware.DcMotorSimple;
         import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
         import com.qualcomm.robotcore.hardware.Servo;
         import com.qualcomm.robotcore.util.ElapsedTime;
+
+
+
 @TeleOp(name=" TeleOp1", group="Examples")  // @Autonomous(...) is the other common choice
 
 public class TeleOp1 extends LinearOpMode {
@@ -28,6 +31,8 @@ public class TeleOp1 extends LinearOpMode {
     public OpticalDistanceSensor ODSRF;
     public OpticalDistanceSensor ODSLF;
     public OpticalDistanceSensor ODSLR;
+
+
 
 
     //servos
@@ -53,12 +58,13 @@ public class TeleOp1 extends LinearOpMode {
         motorRight = hardwareMap.dcMotor.get("motor_right");
         motorFlick = hardwareMap.dcMotor.get("motorFlick");
         motorConveyor = hardwareMap.dcMotor.get("motorConveyor");
-        motorPusher = hardwareMap.dcMotor.get("motorPusher");
+        motorPusher = hardwareMap.dcMotor.get("Press");
         hook = hardwareMap.servo.get("hook");
         ODSLR = hardwareMap.opticalDistanceSensor.get("LR");
         ODSLF = hardwareMap.opticalDistanceSensor.get("LF"); /// SWITCH CONFIGURATION FROM LEFT() TO RIGHT()
         ODSRF = hardwareMap.opticalDistanceSensor.get("RF");
         ODSRF = hardwareMap.opticalDistanceSensor.get("RR");
+
 
         // servoHandL = hardwareMap.servo.get("servoHandL"); //assuming a pushBot configuration of two servo grippers
         //servoHandR = hardwareMap.servo.get("servoHandR");
@@ -78,21 +84,15 @@ public class TeleOp1 extends LinearOpMode {
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
-        runtime.reset();
+
 
            /* ***********************
              * TeleOp Code Below://
              *************************/
 
         while (opModeIsActive()) {  // run until the end of the match (driver presses STOP)
-            telemetry.addData("Status", "Run Time: " + runtime.toString());
             telemetry.addData("red",color_sensor.red());
             telemetry.addData("blue",color_sensor.blue());
-            telemetry.addData("RIGHT REAR:",  ODSRR.getLightDetected());
-            telemetry.addData("LEFT REAR:",  ODSLR.getLightDetected());
-            telemetry.addData("RIGHT FRONT",  ODSRF.getLightDetected());
-            telemetry.addData("LEFT FRONT",  ODSLF.getLightDetected());
-
             telemetry.update();
 
             // tank drive set to gamepad1 joysticks
@@ -141,6 +141,7 @@ public class TeleOp1 extends LinearOpMode {
                 SpinnyL.setPower(gamepad2.right_trigger);
                 SpinnyR.setPower(gamepad2.left_trigger);
             }
+
 
 
             idle(); // Always call idle() at the bottom of your while(opModeIsActive()) loop

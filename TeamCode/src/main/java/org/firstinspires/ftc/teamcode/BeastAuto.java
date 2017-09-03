@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import android.app.Activity;
+import android.graphics.Path;
 import android.view.View;
 
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
@@ -14,6 +15,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.util.ThreadPool;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.BeastHardwareSetup;
@@ -46,11 +48,14 @@ public class BeastAuto extends LinearOpMode {
     public OpticalDistanceSensor ODSRF;
     public OpticalDistanceSensor ODSLF;
     public OpticalDistanceSensor ODSLR;
-
+    public OpticalDistanceSensor BCON;
+    public OpticalDistanceSensor NBCON;
+    public ModernRoboticsI2cRangeSensor Range;
 
 
     //Create and set desired variables, i.e. default hand positions. To be determined based on your build
     final static double MOTOR_STOP = 0.0; // sets motor power to zero
+    public boolean Next = false;
 
     //light sensor variables
     static final double WHITE_THRESHOLD = 0.2;  // spans between 0.1 - 0.5 from dark to light
@@ -84,8 +89,8 @@ public class BeastAuto extends LinearOpMode {
         boolean bCurrState = false;
         boolean bLedOn = true;
         color_sensor = hardwareMap.colorSensor.get("color_sensor");
-        color_sensor.enableLed(bLedOn);
-        Press= hardwareMap.dcMotor.get("Press");
+        color_sensor.enableLed(false);
+        Press = hardwareMap.dcMotor.get("Press");
         motorFlick = hardwareMap.dcMotor.get("motorFlick");
         motor_right = hardwareMap.dcMotor.get("motor_right");
         motor_left = hardwareMap.dcMotor.get("motor_left");
@@ -93,6 +98,10 @@ public class BeastAuto extends LinearOpMode {
         ODSRF = hardwareMap.opticalDistanceSensor.get("RF");
         ODSLF = hardwareMap.opticalDistanceSensor.get("LF");
         ODSLR = hardwareMap.opticalDistanceSensor.get("LR");
+        BCON = hardwareMap.opticalDistanceSensor.get("BCON");
+        NBCON = hardwareMap.opticalDistanceSensor.get("NBCON");
+        Range = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "Range");
+
 
         // "Reverse" the motor that runs backwards when connected directly to the battery
 
@@ -106,32 +115,23 @@ public class BeastAuto extends LinearOpMode {
 ///////////////////////////
         waitForStart();
 
-        motorFlick.setPower(1);   // FIRE!!!
-        Thread.sleep(1000);
-
-        motorFlick.setPower(MOTOR_STOP);  //pause to load next particle
-        Thread.sleep(500);
-
-        motorFlick.setPower(1);  //FIRE 2!!!
-        Thread.sleep(800);
-
-        motorFlick.setPower(MOTOR_STOP);// turns off Flick
+        // turns off Flick
 
 //        encoderDrive(TURN_SPEED,  5,  0, 3.0); //turns towards beacon
 
         // Once Start is pressed the robot begins moving forward, and then enters while loop looking for a white line threshold.
-        motor_left.setPower(.4);
-        motor_right.setPower(.4);
+        motor_left.setPower(.6);
+        motor_right.setPower(.5);
 
         // run until the white line is seen OR the driver presses STOP;
         // will continue to display Light Level values
-        while ( ODSRR.getLightDetected() < WHITE_THRESHOLD) {
+        while (ODSRF.getLightDetected() < WHITE_THRESHOLD) {
 
             // Continue displaying the light level while we are looking for the line threshold value
-            telemetry.addData("RIGHT REAR:",  ODSRR.getLightDetected());
-            telemetry.addData("LEFT REAR:",  ODSLR.getLightDetected());
-            telemetry.addData("RIGHT FRONT",  ODSRF.getLightDetected());
-            telemetry.addData("LEFT FRONT",  ODSLF.getLightDetected());
+            telemetry.addData("RIGHT REAR:", ODSRR.getLightDetected());
+            telemetry.addData("LEFT REAR:", ODSLR.getLightDetected());
+            telemetry.addData("RIGHT FRONT", ODSRF.getLightDetected());
+            telemetry.addData("LEFT FRONT", ODSLF.getLightDetected());
             telemetry.update();
         }
 
@@ -140,9 +140,153 @@ public class BeastAuto extends LinearOpMode {
         motor_right.setPower(MOTOR_STOP);
         sleep(500);     // pause for 1/2 sec to allow motors to fully stop
 
+        motor_left.setPower(.4);    // rotates robot parallel with wall
+        motor_right.setPower(0);
+
+        while (ODSLF.getLightDetected() < WHITE_THRESHOLD) {
+
+            // Continue displaying the light level while we are looking for the line threshold value
+            telemetry.addData("RIGHT REAR:", ODSRR.getLightDetected());
+            telemetry.addData("LEFT REAR:", ODSLR.getLightDetected());
+            telemetry.addData("RIGHT FRONT", ODSRF.getLightDetected());
+            telemetry.addData("LEFT FRONT", ODSLF.getLightDetected());
+            telemetry.update();
+        }
+        motor_right.setPower(MOTOR_STOP);
+        motor_left.setPower(MOTOR_STOP);
+        Thread.sleep(500);
+
+        motor_left.setPower(0);    // rotates robot parallel with wall
+        motor_right.setPower(-.4);
+
+        while (ODSRF.getLightDetected() < WHITE_THRESHOLD) {
+
+            // Continue displaying the light level while we are looking for the line threshold value
+            telemetry.addData("RIGHT REAR:", ODSRR.getLightDetected());
+            telemetry.addData("LEFT REAR:", ODSLR.getLightDetected());
+            telemetry.addData("RIGHT FRONT", ODSRF.getLightDetected());
+            telemetry.addData("LEFT FRONT", ODSLF.getLightDetected());
+            telemetry.update();
+        }
+        motor_right.setPower(MOTOR_STOP);
+        motor_left.setPower(MOTOR_STOP);
+        Thread.sleep(500);
+
+        Press.setPower(-.3);
+        while (Range.getDistance(DistanceUnit.CM) > 6.5) {
+
+        }
+        Press.setPower(MOTOR_STOP);
+        Thread.sleep(500);
+
+        motor_right.setPower(.4);
+        motor_left.setPower(.4);
+
+        while (BCON.getLightDetected() < WHITE_THRESHOLD) {
+
+
+
+        }
+        motor_right.setPower(MOTOR_STOP);
+        motor_left.setPower(MOTOR_STOP);
+        Thread.sleep(1000);
+
+        if (color_sensor.red() > 5) {
+            Press.setPower(-.3);
+            Thread.sleep(500);
+            Press.setPower(0);
+            Thread.sleep(250);
+            Press.setPower(.3);
+            Thread.sleep(500);
+            Press.setPower(MOTOR_STOP);
+
+        } else {
+            motor_left.setPower(.4);
+            motor_right.setPower(.4);
+
+            while(NBCON.getLightDetected()<WHITE_THRESHOLD)
+            {}
+            motor_left.setPower(MOTOR_STOP);
+            motor_right.setPower(MOTOR_STOP);
+            Thread.sleep(500);
+
+            Press.setPower(-.3);
+            Thread.sleep(500);
+            Press.setPower(0);
+            Thread.sleep(250);
+            Press.setPower(.3);
+            Thread.sleep(1000);
+
+
+        }
+
+        motor_left.setPower(MOTOR_STOP);
+        motor_right.setPower(MOTOR_STOP);
+        Thread.sleep(500);
+
+
+        Press.setPower(.3);
+        while(Range.getDistance(DistanceUnit.CM)<8)
+
+        {
+        }
+
+        Press.setPower(MOTOR_STOP);
+        Thread.sleep(500);
+
+        motor_right.setPower(.4);
+        motor_left.setPower(.4);
+        while(BCON.getLightDetected()<WHITE_THRESHOLD)
+        {
+        }
+        motor_right.setPower(MOTOR_STOP);
+        motor_left.setPower(MOTOR_STOP);
+        Thread.sleep(1000);
+
+        Press.setPower(-.3);
+        while (Range.getDistance(DistanceUnit.CM) > 6.5) {
+            telemetry.addData("cm optical", "%.2f cm", Range.cmOptical());
+            telemetry.addData("cm", "%.2f cm", Range.getDistance(DistanceUnit.CM));
+        }
+        Press.setPower(MOTOR_STOP);
+        Thread.sleep(1000);
+
+        if (color_sensor.red() > 5) {
+            Press.setPower(-.3);
+            Thread.sleep(500);
+            Press.setPower(0);
+            Thread.sleep(250);
+            Press.setPower(.3);
+            Thread.sleep(500);
+            Press.setPower(MOTOR_STOP);
+
+        } else {
+            motor_left.setPower(.4);
+            motor_right.setPower(.4);
+            while(NBCON.getLightDetected()<WHITE_THRESHOLD)
+            {}
+            motor_right.setPower(MOTOR_STOP);
+            motor_left.setPower(MOTOR_STOP);
+            Thread.sleep(500);
+
+            Press.setPower(-.3);
+            Thread.sleep(500);
+            Press.setPower(0);
+            Thread.sleep(250);
+            Press.setPower(.3);
+            Thread.sleep(500);
+
+        }
 
 
     }
+
+
+
+
+//}
+
+
 //////////////////////////
 //ENCODER DRIVE METHOD........
 //////////////////////////
@@ -193,4 +337,51 @@ public class BeastAuto extends LinearOpMode {
             sleep(250);   // optional pause after each move
         }
     }
+    public void driveEnc(double iSpeed, int iDist) {
+        double leftDirAdj;
+        double rightDirAdj;
+        double ticksPerInch = 67.0;
+
+        int leftTarget;
+        int rightTarget;
+
+        int leftStart = 0;
+        int rightStart = 0;
+
+        if (iSpeed > 0.0) {
+            leftDirAdj = 1.0;
+            rightDirAdj = 1.0;
+        } else {
+            leftDirAdj = -1.0;
+            rightDirAdj = -1.0;
+        }
+
+        leftStart  = motor_left.getCurrentPosition();
+        rightStart = motor_right.getCurrentPosition();
+
+        leftTarget  = leftStart + (int) (iDist * ticksPerInch * leftDirAdj);
+        rightTarget = rightStart + (int) (iDist * ticksPerInch * rightDirAdj);
+
+        motor_left.setPower(iSpeed);
+        motor_right.setPower(iSpeed);
+
+        if (iSpeed > 0.0) {
+
+            while (opModeIsActive() &&
+                    motor_left.getCurrentPosition() < leftTarget &&
+                    motor_right.getCurrentPosition() < rightTarget ) {
+            }
+        }
+        else {
+            while (opModeIsActive() &&
+                    motor_left.getCurrentPosition() > leftTarget &&
+                    motor_right.getCurrentPosition() > rightTarget ) {
+            }
+        }
+
+        motor_left.setPower(0.0);
+        motor_right.setPower(0.0);
+
+    }
 }
+

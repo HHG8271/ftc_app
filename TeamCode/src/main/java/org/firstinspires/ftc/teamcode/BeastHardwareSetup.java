@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.GyroSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 
 
@@ -32,22 +33,30 @@ public class BeastHardwareSetup {
 
     //motors
     public DcMotor motor_left = null;
-
     public DcMotor motor_right = null;
     public DcMotor motorConveyor = null;
     public DcMotor motorFlick = null;
     public DcMotor SpinnyR = null;
     public DcMotor SpinnyL = null;
+    public DcMotor Press = null;
 
     //servos
- public Servo servo = null;
-  //  public Servo servoHandR = null;
+    public Servo servo = null;
+    //  public Servo servoHandR = null;
 
     //sensors
+    // public GyroSensor gyro  = null;
+    public ColorSensor color_sensor;
+    public OpticalDistanceSensor ODSRR;
+    public OpticalDistanceSensor ODSRF;
+    public OpticalDistanceSensor ODSLF;
+    public OpticalDistanceSensor ODSLR;
+    public OpticalDistanceSensor BCON;
+    public OpticalDistanceSensor NBCON;
+    public ModernRoboticsI2cRangeSensor Range;
+    //sensors
    // public GyroSensor gyro  = null;
-    ColorSensor color_sensor;
-    ColorSensor color_mid;
-    ModernRoboticsI2cRangeSensor RangeSensor;
+
 
     /* local OpMode members. */
     HardwareMap hwMap        = null;
@@ -56,6 +65,7 @@ public class BeastHardwareSetup {
     final static double Right = 0.3;
     final static double Left= 0.9;
     final static double MOTOR_STOP = 0.0; // sets motor power to zero
+
 
    /* Constructor   // this is not required as JAVA does it for you, but useful if you want to add
     * function to this method when called in OpModes.
@@ -76,9 +86,10 @@ public class BeastHardwareSetup {
         motor_right= hwMap.dcMotor.get("motor_right");
         motorConveyor = hwMap.dcMotor.get("motorConveyor");
         motorFlick = hwMap.dcMotor.get("motorFlick");
-        color_mid =hwMap.colorSensor.get("color_sensor");
-        color_sensor = hwMap.colorSensor.get("color_mid");
-        RangeSensor = hwMap.get(ModernRoboticsI2cRangeSensor.class, "sensor_range");
+        SpinnyL = hwMap.dcMotor.get("spinnyl");
+        SpinnyR = hwMap.dcMotor.get("spinnyr");
+        Press = hwMap.dcMotor.get("Press");
+
 
 
         // Set the drive motor directions:
@@ -112,7 +123,14 @@ public class BeastHardwareSetup {
          * SENSOR SECTION
          ************************************************************/
         //Define sensors
-
+        Range = hwMap.get(ModernRoboticsI2cRangeSensor.class, "sensor_range");
+        ODSRR = hwMap.opticalDistanceSensor.get("RR");
+        ODSRF = hwMap.opticalDistanceSensor.get("RF");
+        ODSLF = hwMap.opticalDistanceSensor.get("LF");
+        ODSLR = hwMap.opticalDistanceSensor.get("LR");
+        BCON = hwMap.opticalDistanceSensor.get("BCON");
+        NBCON = hwMap.opticalDistanceSensor.get("NBCON");
+        color_sensor =hwMap.colorSensor.get("color_sensor");
    }
 
 }
